@@ -46,3 +46,14 @@ def insert_planogram():
     except Exception as e: 
         print(str(e))
         return jsonify({"message": "Error inserting planogram!"}), 500
+
+@app.route('/getPlanograms', methods = ["GET"])
+def get_planogram():
+    planograms = []
+
+    response = database.get_collection("Planograms").find({})
+    for planogram in response:
+        planogram["_id"] = str(planogram["_id"])
+        planograms.append(planogram)
+    
+    return jsonify({"planograms": planograms}), 200
