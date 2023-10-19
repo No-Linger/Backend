@@ -13,8 +13,23 @@ database.connect()
 
 @app.route('/createPlanogram', methods = ["POST"])
 def insert_planogram():
+    """
+    Inserts a planogram into the MongoDB collection.
+
+    Args:
+        `name`: The name of the planogram
+
+        `store`: The store where the planogram is assigned
+
+        `date`: The date of the planogram is uploaded
+
+        `img`: The image of the planogram
+
+    Returns:
+        A JSON response with a success message and a status code of 200 if the planogram is inserted successfully.
+        A JSON response with an error message and a status code of 500 if an error occurs during the insertion process.
+    """
     try:
-                
         planogram = request.json
 
         planogram = Planograms(
@@ -22,7 +37,7 @@ def insert_planogram():
             store=planogram["store"],
             date=planogram["date"],
             img=planogram["img"],
-            collection= database.get_collection("Planograms")
+            collection=database.get_collection("Planograms")
         )
 
         planogram.insert()
