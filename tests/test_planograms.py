@@ -20,8 +20,8 @@ class TestPlanograms:
         assert planogram.name == name
         assert planogram.store == store
         assert planogram.date == date
-        assert planogram.img == img
-        assert planogram.collection == collection_mock
+        assert planogram.img_path == img
+        assert planogram._collection == collection_mock
 
     # Calling the to_dic method should return a dictionary with the correct keys and values.
     def test_to_dic_method(self, mocker):
@@ -41,7 +41,7 @@ class TestPlanograms:
             'name': name,
             'store': store,
             'date': date,
-            'img': img
+            'img_path': img
         }
 
     # Calling the insert method with valid arguments should insert a document into the collection and return True.
@@ -63,7 +63,7 @@ class TestPlanograms:
             'name': name,
             'store': store,
             'date': date,
-            'img': img
+            'img_path': img
         })
 
     # Calling the to_dic method when some attributes are missing should return a dictionary with None values for those attributes.
@@ -84,5 +84,5 @@ class TestPlanograms:
             'name': name,
             'store': store,
             'date': date,
-            'img': None
+            'img_path': None
         }
