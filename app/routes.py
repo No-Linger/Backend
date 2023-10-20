@@ -38,7 +38,7 @@ def insert_planogram():
             name=planogram["name"],
             store=planogram["store"],
             date=planogram["date"],
-            img=planogram["img"],
+            img_path=planogram["img"],
             collection=database.get_collection("Planograms")
         )
 
