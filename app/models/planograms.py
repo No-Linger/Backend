@@ -1,25 +1,59 @@
 from pymongo import collection
+import logging
 
 class Planograms:
-    def __init__(self, name: str, store: str, date: str, img:str, collection: collection) -> None:
+    """
+    A class representing a planogram, which is a visual representation of how products should be arranged on shelves in a store.
+
+    Attributes:
+        name (str): The name of the planogram.
+        store (str): The store associated with the planogram.
+        date (str): The date of the planogram.
+        img_path (str): The path to the image file of the planogram.
+        _collection (collection): A reference to a collection object from the `pymongo` library.
+    """
+
+    def __init__(self, name: str, store: str, date: str, img_path: str, collection: collection) -> None:
+        """
+        Initializes a planogram object with the provided attributes.
+
+        Args:
+            name (str): The name of the planogram.
+            store (str): The store associated with the planogram.
+            date (str): The date of the planogram.
+            img_path (str): The path to the image file of the planogram.
+            collection (collection): A reference to a collection object from the `pymongo` library.
+        """
         self.name = name
         self.store = store
         self.date = date
-        self.img = img 
-        self.collection = collection
+        self.img_path = img_path
+        self._collection = collection
     
-    def to_dic(self):
+    def to_dic(self) -> dict:
+        """
+        Converts the planogram object to a dictionary representation.
+
+        Returns:
+            dict: A dictionary representation of the planogram object.
+        """
         return {
             'name': self.name,
             'store': self.store,
             'date': self.date,
-            'img': self.img
+            'img_path': self.img_path
         }
 
-    def insert(self):
+    def insert(self) -> bool:
+        """
+        Inserts the planogram into a collection.
+
+        Returns:
+            bool: True if the planogram was successfully inserted, False otherwise.
+        """
         try:
-            self.collection.insert_one(self.to_dic())
+            self._collection.insert_one(self.to_dic())
             return True
         except Exception as e:
-            print(e)
+            logging.error(e)
             return False
