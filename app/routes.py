@@ -6,6 +6,7 @@ from db import Database
 from config import Config
 from app.models.planograms import Planograms
 from app.models.statistics import Statistics
+from app.models.stores import Stores
 
 CORS(app)
 
@@ -104,3 +105,40 @@ def get_stats():
     except Exception as e:
        logging.exception(str(e))
        return jsonify({"error": "Error getting data from database"}) 
+
+@app.route('/saveStore', methods = ["POST"])
+def insert_store():
+    try:
+        data = request.json
+
+        stores = Stores(
+            name=data["name"],
+            address=data["address"],
+            manager=data["manager"],
+            collection=database.get_collection("Stores")
+        )
+
+        stores.insert()
+        logging.info("Inserted store data")
+
+        return jsonify({"message": "Saved store data!"}), 200
+    except Exception as e:
+        logging.exception(str(e))
+
+        return jsonify({"error": "Error saving store data"})
+
+@app.route('/getStores', methods = ["GET"])
+def get_stores():
+    try:
+        stores = []
+
+        response = database.get_collection("Stores").find({})
+        for store in response:
+            store["_id"] = str(store["_id"])
+            stores.append(store)
+
+        logging.info("Successfully retrieved store data")
+        return jsonify({"stores": stores})
+    except Exception as e:
+        logging.exception(str(e))
+        return jsonify({"error": "Error getting store data from database"})
