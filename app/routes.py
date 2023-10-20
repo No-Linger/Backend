@@ -1,9 +1,11 @@
+import logging
 from app import app
 from flask import request, jsonify
 from flask_cors import CORS
 from db import Database
 from config import Config
 from app.models.planograms import Planograms
+from app.models.statistics import Statistics
 
 CORS(app)
 
@@ -57,3 +59,48 @@ def get_planogram():
         planograms.append(planogram)
     
     return jsonify({"planograms": planograms}), 200
+
+@app.route('/saveStatistics', methods = ["POST"])
+def insert_stats():
+    try:
+        data = request.json
+        statistics = Statistics(
+            date='',
+            time='',
+            model_percentage='',
+            error_percentage='',
+            collection=database.get_collection("Statistics")
+        )
+        
+        statistics_list = []
+        for item in data:
+            statistic = statistics
+            statistic.date = item["date"]
+            statistic.time = item["time"]
+            statistic.model_percentage = item['model_percentage']
+            statistic.error_percentage = item['error_percentage']
+
+            statistics_list.append(statistic.to_dic())
+
+        statistics.insert_many(statistics_list)
+        logging.info("Inserted data in db")
+        return jsonify({"message": "Saved data!"}), 200
+    except Exception as e:
+        logging.exception(e)
+        return jsonify({"error":"Error saving the data"}), 500
+    
+@app.route('/getStatistics', methods = ["GET"])
+def get_stats():
+    try:
+        stats = []
+
+        response = database.get_collection("Statistics").find({})
+        for stat in response:
+            stat["_id"] = str(stat["_id"])
+            stats.append(stat)
+
+        logging.info("Successfully retrieved data")
+        return jsonify({"statistics": stats})
+    except Exception as e:
+       logging.exception(str(e))
+       return jsonify({"error": "Error getting data from database"}) 
