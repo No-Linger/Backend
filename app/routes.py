@@ -75,10 +75,10 @@ def insert_stats():
         statistics_list = []
         for item in data:
             statistic = statistics
-            statistic.date = item["date"]
-            statistic.time = item["time"]
-            statistic.model_percentage = item['model_percentage']
-            statistic.error_percentage = item['error_percentage']
+            statistic.date = item["fecha"]
+            statistic.time = item["hora"]
+            statistic.model_percentage = item['porcentaje_modelo']
+            statistic.error_percentage = item['porcentaje_error']
 
             statistics_list.append(statistic.to_dic())
 
