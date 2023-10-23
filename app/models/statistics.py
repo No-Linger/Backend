@@ -12,7 +12,7 @@ class Statistics:
         collection (collection): The MongoDB collection where the statistics will be stored.
     """
 
-    def __init__(self, date: str, time: str, model_percentage: str, error_percentage: str, collection: collection) -> None:
+    def __init__(self, date: str, time: str, model_percentage: float, error_percentage: float, collection: collection) -> None:
         """
         Initializes a Statistics instance with the provided data and a MongoDB collection.
 
