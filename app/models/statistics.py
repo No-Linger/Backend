@@ -1,4 +1,4 @@
-from pymongo import collection
+from pymongo.collection import Collection
 
 class Statistics:
     """
