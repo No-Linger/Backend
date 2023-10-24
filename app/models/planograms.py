@@ -1,4 +1,4 @@
-from pymongo import collection
+from pymongo.collection import Collection
 import logging
 
 class Planograms:
@@ -13,7 +13,7 @@ class Planograms:
         _collection (collection): A reference to a collection object from the `pymongo` library.
     """
 
-    def __init__(self, name: str, store: str, date: str, img_path: str, collection: collection) -> None:
+    def __init__(self, name: str, store: str, date: str, img_path: str, collection: Collection) -> None:
         """
         Initializes a planogram object with the provided attributes.
 
