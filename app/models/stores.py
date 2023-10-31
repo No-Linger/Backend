@@ -43,6 +43,7 @@ class Stores:
         dict: The store information in dictionary format.
         """
         return {
+            # '_id': self.get_next_id(),
             'name': self.name,
             'address': self.address,
             'manager': self.manager
@@ -58,6 +59,15 @@ class Stores:
         try:
             self.store_collection.insert_one(self.to_dic())
             return True
+        except Exception as e:
+            logging.error(e)
+            raise ValueError(e)
+    
+    def get_next_id(self):
+        try:
+            id = self.store_collection.count_documents({})
+
+            return id + 1
         except Exception as e:
             logging.error(e)
             raise ValueError(e)
