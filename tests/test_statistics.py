@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import Mock
 from pymongo.collection import Collection
-from app.models.statistics import Statistics  # Reemplaza 'your_module' con el nombre de tu módulo
+from app.models.statistics import Statistics
 
 @pytest.fixture
 def mock_stats_collection():
@@ -9,10 +9,12 @@ def mock_stats_collection():
 
 @pytest.fixture
 def stats_instance(mock_stats_collection):
-    return Statistics("2023-10-19", "12:30", "90%", "5%", mock_stats_collection)
+    return Statistics(1, "test planogram", "2023-10-19", "12:30", "90%", "5%", mock_stats_collection)
 
 def test_to_dict(stats_instance: Statistics):
     expected_dict = {
+        'store_id': 1,
+        'planogram': "test planogram",
         'date': "2023-10-19",
         'time': "12:30",
         'model_percentage': "90%",
