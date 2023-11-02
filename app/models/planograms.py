@@ -38,10 +38,10 @@ class Planograms:
             dict: A dictionary representation of the planogram object.
         """
         return {
-            'name': self.name,
-            'store': self.store,
-            'date': self.date,
-            'img_path': self.img_path
+            'Nombre': self.name,
+            'Tienda': self.store,
+            'Fecha': self.date,
+            'Ver': self.img_path
         }
 
     def insert(self) -> bool:
