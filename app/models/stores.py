@@ -61,3 +61,12 @@ class Stores:
         except Exception as e:
             logging.error(e)
             raise ValueError(e)
+    
+    def get_next_id(self):
+        try:
+            id = self.store_collection.count_documents({})
+
+            return id + 1
+        except Exception as e:
+            logging.error(e)
+            raise ValueError(e)
