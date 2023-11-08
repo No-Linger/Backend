@@ -3,12 +3,13 @@ import logging
 
 class Users:
 
-    def __init__(self,id, name, email, phone,store_id, collection: Collection) -> None:
+    def __init__(self,id, name, email, phone,store_id,role, collection: Collection) -> None:
         self.id = id
         self.name = name
         self.email = email
         self.phone = phone
         self.store_id = store_id
+        self.role = role
         self.collection = collection
 
     def to_dic(self) -> dict:
