@@ -28,6 +28,7 @@ class Users:
         except Exception as e:
             logging.error(e)
             return False
+            
         
     
 

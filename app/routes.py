@@ -167,3 +167,20 @@ def create_user():
         print(str(e))
         print("Errror")
         return jsonify({"message": "Error inserting User!"}), 500
+    
+@app.route('/getUsers',methods = ["GET"])
+def get_users():
+    try:
+        people = []
+
+        response = database.get_collection("Users").find({})
+        for user in response:
+            user["_id"] = str(user["_id"])
+            people.append(user)
+
+        logging.info("Successfully retrieved store data")
+        return jsonify({"users": people})
+    except Exception as e:
+        logging.exception(str(e))
+        return jsonify({"error": "Error getting user data from database"})
+    
