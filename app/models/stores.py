@@ -43,10 +43,9 @@ class Stores:
         dict: The store information in dictionary format.
         """
         return {
-            # '_id': self.get_next_id(),
-            'name': self.name,
-            'address': self.address,
-            'manager': self.manager
+            'Nombre': self.name,
+            'Dirección': self.address,
+            'Encargado': self.manager
         }
     
     def insert(self):

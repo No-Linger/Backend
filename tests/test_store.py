@@ -16,9 +16,9 @@ class TestStatistics:
     def test_to_dic_method(self, mocker):
         store = Store("Store Name", "Store Address", "Store Manager", mocker.Mock())
         expected_dict = {
-            'name': "Store Name",
-            'address': "Store Address",
-            'manager': "Store Manager"
+            'Nombre': "Store Name",
+            'Dirección': "Store Address",
+            'Encargado': "Store Manager"
         }
         assert store.to_dic() == expected_dict
 
