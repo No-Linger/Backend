@@ -5,6 +5,8 @@ class Statistics:
     Represents statistical data and provides methods to convert and insert the data.
 
     Args:
+        store_id (int): The store id
+        planogram (str): The planogram   
         date (str): The date of the statistics.
         time (str): The time of the statistics.
         model_percentage (str): The model percentage of the statistics.
@@ -12,7 +14,7 @@ class Statistics:
         collection (collection): The MongoDB collection where the statistics will be stored.
     """
 
-    def __init__(self, date: str, time: str, model_percentage: float, error_percentage: float, collection: Collection) -> None:
+    def __init__(self, store_id: int, planogram: str, date: str, time: str, model_percentage: str, error_percentage: str, collection: Collection) -> None:
         """
         Initializes a Statistics instance with the provided data and a MongoDB collection.
 
@@ -23,6 +25,8 @@ class Statistics:
             error_percentage (str): The error percentage of the statistics.
             collection (collection): The MongoDB collection where the statistics will be stored.
         """
+        self.store_id = store_id
+        self.planogram = planogram
         self.date = date
         self.time = time
         self.model_percentage = model_percentage
@@ -38,6 +42,8 @@ class Statistics:
             dict: A dictionary representation of the Statistics instance.
         """
         return {
+            'store_id': self.store_id,
+            'planogram': self.planogram,
             'date': self.date,
             'time': self.time,
             'model_percentage': self.model_percentage,

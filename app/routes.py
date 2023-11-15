@@ -7,6 +7,7 @@ from config import Config
 from app.models.planograms import Planograms
 from app.models.statistics import Statistics
 from app.models.stores import Stores
+from app.models.users import Users
 
 CORS(app)
 
@@ -142,3 +143,44 @@ def get_stores():
     except Exception as e:
         logging.exception(str(e))
         return jsonify({"error": "Error getting store data from database"})
+    
+@app.route('/createUser',methods = ["POST"])
+def create_user():
+    try:
+        data = request.json
+
+        newUser = Users(
+            id=data["id"],
+            name=data["name"],
+            email=data["email"],
+            phone=data["phone"],
+            store_id=data["store_id"],
+            role=data["role"],
+            collection=database.get_collection("Users")
+        )
+
+        newUser.insert_user()
+        print("No error")
+        return jsonify({"message": "User inserted successfully!"}), 200
+
+    except Exception as e:
+        print(str(e))
+        print("Errror")
+        return jsonify({"message": "Error inserting User!"}), 500
+    
+@app.route('/getUsers',methods = ["GET"])
+def get_users():
+    try:
+        people = []
+
+        response = database.get_collection("Users").find({})
+        for user in response:
+            user["_id"] = str(user["_id"])
+            people.append(user)
+
+        logging.info("Successfully retrieved store data")
+        return jsonify({"users": people})
+    except Exception as e:
+        logging.exception(str(e))
+        return jsonify({"error": "Error getting user data from database"})
+    
