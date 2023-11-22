@@ -155,6 +155,7 @@ def create_user():
             email=data["email"],
             phone=data["phone"],
             store_id=data["store_id"],
+            region=data["region"],
             role=data["role"],
             collection=database.get_collection("Users")
         )
