@@ -13,7 +13,7 @@ class Planograms:
         _collection (collection): A reference to a collection object from the `pymongo` library.
     """
 
-    def __init__(self, name: str, store: str, date: str, img_path: str, collection: Collection) -> None:
+    def __init__(self, name: str, store: str, date: str, img_path: str, region:str, collection: Collection) -> None:
         """
         Initializes a planogram object with the provided attributes.
 
@@ -28,6 +28,7 @@ class Planograms:
         self.store = store
         self.date = date
         self.img_path = img_path
+        self.region = region
         self._collection = collection
     
     def to_dic(self) -> dict:
@@ -41,6 +42,7 @@ class Planograms:
             'Nombre': self.name,
             'Tienda': self.store,
             'Fecha': self.date,
+            'Region': self.region,
             'Ver': self.img_path
         }
 
