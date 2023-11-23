@@ -136,12 +136,22 @@ def get_stats():
 @app.route('/saveStore', methods = ["POST"])
 def insert_store():
     try:
+        try:
+            token = request.headers.get("Authorization")
+            decoded_token = auth.verify_id_token(token)
+            user_id = decoded_token["user_id"]
+        except Exception as e:
+            logging.exception(str(e))
+            return jsonify({"error": "Error authenticating user"})
+
+        user = database.get_collection("Users").find_one({"_id": user_id})
         data = request.json
 
         stores = Stores(
             name=data["name"],
             address=data["address"],
             manager=data["manager"],
+            stores=data["stores"],
             collection=database.get_collection("Stores")
         )
 
