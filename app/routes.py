@@ -8,6 +8,7 @@ from app.models.planograms import Planograms
 from app.models.statistics import Statistics
 from app.models.stores import Stores
 from app.models.users import Users
+from firebase_admin import auth
 
 CORS(app)
 
@@ -34,6 +35,15 @@ def insert_planogram():
         A JSON response with an error message and a status code of 500 if an error occurs during the insertion process.
     """
     try:
+        try:
+            token = request.headers.get("Authorization")
+            decoded_token = auth.verify_id_token(token)
+            user_id = decoded_token["user_id"]
+        except Exception as e:
+            logging.exception(str(e))
+            return jsonify({"error": "Error authenticating user"})
+
+        user = database.get_collection("Users").find_one({"_id": user_id})
         planogram = request.json
 
         planogram = Planograms(
@@ -41,6 +51,7 @@ def insert_planogram():
             store=planogram["store"],
             date=planogram["date"],
             img_path=planogram["img"],
+            region=user["region"],
             collection=database.get_collection("Planograms")
         )
 
