@@ -29,10 +29,11 @@ class Stores:
     - store_collection: The MongoDB collection used to store the store information.
     """
 
-    def __init__(self, name, address, manager, collection: Collection) -> None:
+    def __init__(self, name, address, manager, region, collection: Collection) -> None:
         self.name = name
         self.address = address
         self.manager = manager
+        self.region = region
         self.store_collection = collection
     
     def to_dic(self):
@@ -45,6 +46,7 @@ class Stores:
         return {
             'Nombre': self.name,
             'Dirección': self.address,
+            'Region': self.region,
             'Encargado': self.manager
         }
     
