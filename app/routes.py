@@ -167,6 +167,15 @@ def insert_store():
 @app.route('/getStores', methods = ["GET"])
 def get_stores():
     try:
+        try:
+            token = request.headers.get("Authorization")
+            decoded_token = auth.verify_id_token(token)
+            user_id = decoded_token["user_id"]
+        except Exception as e:
+            logging.exception(str(e))
+            return jsonify({"error": "Error authenticating user"})
+
+        user = database.get_collection("Users").find_one({"_id": user_id})
         stores = []
 
         response = database.get_collection("Stores").find({"region": user["region"]})
