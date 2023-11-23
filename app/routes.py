@@ -217,9 +217,18 @@ def create_user():
 @app.route('/getUsers',methods = ["GET"])
 def get_users():
     try:
+        try:
+            token = request.headers.get("Authorization")
+            decoded_token = auth.verify_id_token(token)
+            user_id = decoded_token["user_id"]
+        except Exception as e:
+            logging.exception(str(e))
+            return jsonify({"error": "Error authenticating user"})
+
+        user = database.get_collection("Users").find_one({"_id": user_id})
         people = []
 
-        response = database.get_collection("Users").find({})
+        response = database.get_collection("Users").find({"region": user["region"]})
         for user in response:
             user["_id"] = str(user["_id"])
             people.append(user)
