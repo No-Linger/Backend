@@ -64,14 +64,29 @@ def insert_planogram():
 
 @app.route('/getPlanograms', methods = ["GET"])
 def get_planogram():
-    planograms = []
+    try:
+        try:
+            token = request.headers.get("Authorization")
+            decoded_token = auth.verify_id_token(token)
+            user_id = decoded_token["user_id"]
+        except Exception as e:
+            logging.exception(str(e))
+            return jsonify({"error": "Error authenticating user"})
 
-    response = database.get_collection("Planograms").find({})
-    for planogram in response:
-        planogram["_id"] = str(planogram["_id"])
-        planograms.append(planogram)
-    
-    return jsonify({"planograms": planograms}), 200
+        user = database.get_collection("Users").find_one({"_id": user_id})
+
+        planograms = []
+
+        response = database.get_collection("Planograms").find({"region": user["region"]})
+        for planogram in response:
+            planogram["_id"] = str(planogram["_id"])
+            planograms.append(planogram)
+
+        logging.info("Successfully retrieved planograms")
+        return jsonify({"planograms": planograms})
+    except Exception as e:
+        logging.exception(str(e))
+        return jsonify({"error": "Error getting planograms from database"})
 
 @app.route('/saveStatistics', methods = ["POST"])
 def insert_stats():
@@ -144,7 +159,7 @@ def get_stores():
     try:
         stores = []
 
-        response = database.get_collection("Stores").find({})
+        response = database.get_collection("Stores").find({"region": user["region"]})
         for store in response:
             store["_id"] = str(store["_id"])
             stores.append(store)
