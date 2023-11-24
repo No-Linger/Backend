@@ -239,3 +239,18 @@ def get_users():
         logging.exception(str(e))
         return jsonify({"error": "Error getting user data from database"})
     
+@app.route("/getUser", methods=["GET"])
+def get_user():
+    try:
+        token = request.headers.get("Authorization")
+        decoded_token = auth.verify_id_token(token)
+        user_id = decoded_token["user_id"]
+
+        user = database.get_collection("Users").find_one({"_id": user_id})
+        user["_id"] = str(user["_id"])
+
+        logging.info("Successfully retrieved user data")
+        return jsonify({"user": user})
+    except Exception as e:
+        logging.exception(str(e))
+        return jsonify({"error": "Error getting user data from database"})
