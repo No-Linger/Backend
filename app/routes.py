@@ -8,6 +8,7 @@ from app.models.planograms import Planograms
 from app.models.statistics import Statistics
 from app.models.stores import Stores
 from app.models.users import Users
+from firebase_admin import auth
 
 CORS(app)
 
@@ -34,6 +35,15 @@ def insert_planogram():
         A JSON response with an error message and a status code of 500 if an error occurs during the insertion process.
     """
     try:
+        try:
+            token = request.headers.get("Authorization")
+            decoded_token = auth.verify_id_token(token)
+            user_id = decoded_token["user_id"]
+        except Exception as e:
+            logging.exception(str(e))
+            return jsonify({"error": "Error authenticating user"})
+
+        user = database.get_collection("Users").find_one({"_id": user_id})
         planogram = request.json
 
         planogram = Planograms(
@@ -41,6 +51,7 @@ def insert_planogram():
             store=planogram["store"],
             date=planogram["date"],
             img_path=planogram["img"],
+            region=user["Region"],
             collection=database.get_collection("Planograms")
         )
 
@@ -53,14 +64,29 @@ def insert_planogram():
 
 @app.route('/getPlanograms', methods = ["GET"])
 def get_planogram():
-    planograms = []
+    try:
+        try:
+            token = request.headers.get("Authorization")
+            decoded_token = auth.verify_id_token(token)
+            user_id = decoded_token["user_id"]
+        except Exception as e:
+            logging.exception(str(e))
+            return jsonify({"error": "Error authenticating user"})
 
-    response = database.get_collection("Planograms").find({})
-    for planogram in response:
-        planogram["_id"] = str(planogram["_id"])
-        planograms.append(planogram)
-    
-    return jsonify({"planograms": planograms}), 200
+        user = database.get_collection("Users").find_one({"_id": user_id})
+
+        planograms = []
+
+        response = database.get_collection("Planograms").find({"R   egion": user["Region"]})
+        for planogram in response:
+            planogram["_id"] = str(planogram["_id"])
+            planograms.append(planogram)
+
+        logging.info("Successfully retrieved planograms")
+        return jsonify({"planograms": planograms})
+    except Exception as e:
+        logging.exception(str(e))
+        return jsonify({"error": "Error getting planograms from database"})
 
 @app.route('/saveStatistics', methods = ["POST"])
 def insert_stats():
@@ -71,6 +97,8 @@ def insert_stats():
             time='',
             model_percentage='',
             error_percentage='',
+            person='',
+            products=[],
             collection=database.get_collection("Statistics")
         )
         
@@ -80,7 +108,10 @@ def insert_stats():
             statistic.date = item["date"]
             statistic.time = item["time"]
             statistic.model_percentage = item['model_percentage']
-            statistic.error_percentage = item['error_percentage']
+            statistic.error_percentage = item['error_percentage'],
+            statistic.person = item['person'],
+            statistic.products = item['products']
+            
 
             statistics_list.append(statistic.to_dic())
 
@@ -110,12 +141,22 @@ def get_stats():
 @app.route('/saveStore', methods = ["POST"])
 def insert_store():
     try:
+        try:
+            token = request.headers.get("Authorization")
+            decoded_token = auth.verify_id_token(token)
+            user_id = decoded_token["user_id"]
+        except Exception as e:
+            logging.exception(str(e))
+            return jsonify({"error": "Error authenticating user"})
+
+        user = database.get_collection("Users").find_one({"_id": user_id})
         data = request.json
 
         stores = Stores(
             name=data["name"],
             address=data["address"],
             manager=data["manager"],
+            region=user["Region"],
             collection=database.get_collection("Stores")
         )
 
@@ -131,13 +172,21 @@ def insert_store():
 @app.route('/getStores', methods = ["GET"])
 def get_stores():
     try:
+        try:
+            token = request.headers.get("Authorization")
+            decoded_token = auth.verify_id_token(token)
+            user_id = decoded_token["user_id"]
+        except Exception as e:
+            logging.exception(str(e))
+            return jsonify({"error": "Error authenticating user"})
+
+        user = database.get_collection("Users").find_one({"_id": user_id})
         stores = []
 
-        response = database.get_collection("Stores").find({})
+        response = database.get_collection("Stores").find({"Region": user["Region"]})
         for store in response:
             store["_id"] = str(store["_id"])
             stores.append(store)
-
         logging.info("Successfully retrieved store data")
         return jsonify({"stores": stores})
     except Exception as e:
@@ -155,6 +204,7 @@ def create_user():
             email=data["email"],
             phone=data["phone"],
             store_id=data["store_id"],
+            region=data["region"],
             role=data["role"],
             collection=database.get_collection("Users")
         )
@@ -171,9 +221,18 @@ def create_user():
 @app.route('/getUsers',methods = ["GET"])
 def get_users():
     try:
+        try:
+            token = request.headers.get("Authorization")
+            decoded_token = auth.verify_id_token(token)
+            user_id = decoded_token["user_id"]
+        except Exception as e:
+            logging.exception(str(e))
+            return jsonify({"error": "Error authenticating user"})
+
+        user = database.get_collection("Users").find_one({"_id": user_id})
         people = []
 
-        response = database.get_collection("Users").find({})
+        response = database.get_collection("Users").find({"Region": user["Region"]})
         for user in response:
             user["_id"] = str(user["_id"])
             people.append(user)
@@ -184,3 +243,18 @@ def get_users():
         logging.exception(str(e))
         return jsonify({"error": "Error getting user data from database"})
     
+@app.route("/getUser", methods=["GET"])
+def get_user():
+    try:
+        token = request.headers.get("Authorization")
+        decoded_token = auth.verify_id_token(token)
+        user_id = decoded_token["user_id"]
+
+        user = database.get_collection("Users").find_one({"_id": user_id})
+        user["_id"] = str(user["_id"])
+
+        logging.info("Successfully retrieved user data")
+        return jsonify({"user": user})
+    except Exception as e:
+        logging.exception(str(e))
+        return jsonify({"error": "Error getting user data from database"})
