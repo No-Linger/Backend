@@ -97,6 +97,8 @@ def insert_stats():
             time='',
             model_percentage='',
             error_percentage='',
+            person='',
+            products=[],
             collection=database.get_collection("Statistics")
         )
         
@@ -106,7 +108,10 @@ def insert_stats():
             statistic.date = item["date"]
             statistic.time = item["time"]
             statistic.model_percentage = item['model_percentage']
-            statistic.error_percentage = item['error_percentage']
+            statistic.error_percentage = item['error_percentage'],
+            statistic.person = item['person'],
+            statistic.products = item['products']
+            
 
             statistics_list.append(statistic.to_dic())
 
