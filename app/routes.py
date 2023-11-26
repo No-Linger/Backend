@@ -51,7 +51,7 @@ def insert_planogram():
             store=planogram["store"],
             date=planogram["date"],
             img_path=planogram["img"],
-            region=user["region"],
+            region=user["Region"],
             collection=database.get_collection("Planograms")
         )
 
@@ -77,7 +77,7 @@ def get_planogram():
 
         planograms = []
 
-        response = database.get_collection("Planograms").find({"region": user["region"]})
+        response = database.get_collection("Planograms").find({"R   egion": user["Region"]})
         for planogram in response:
             planogram["_id"] = str(planogram["_id"])
             planograms.append(planogram)
@@ -156,7 +156,7 @@ def insert_store():
             name=data["name"],
             address=data["address"],
             manager=data["manager"],
-            stores=data["stores"],
+            region=user["Region"],
             collection=database.get_collection("Stores")
         )
 
@@ -183,11 +183,10 @@ def get_stores():
         user = database.get_collection("Users").find_one({"_id": user_id})
         stores = []
 
-        response = database.get_collection("Stores").find({"region": user["region"]})
+        response = database.get_collection("Stores").find({"Region": user["Region"]})
         for store in response:
             store["_id"] = str(store["_id"])
             stores.append(store)
-
         logging.info("Successfully retrieved store data")
         return jsonify({"stores": stores})
     except Exception as e:
@@ -233,7 +232,7 @@ def get_users():
         user = database.get_collection("Users").find_one({"_id": user_id})
         people = []
 
-        response = database.get_collection("Users").find({"region": user["region"]})
+        response = database.get_collection("Users").find({"Region": user["Region"]})
         for user in response:
             user["_id"] = str(user["_id"])
             people.append(user)
