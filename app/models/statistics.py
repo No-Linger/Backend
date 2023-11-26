@@ -1,4 +1,6 @@
 from pymongo.collection import Collection
+from typing import List
+
 
 class Statistics:
     """
@@ -14,7 +16,9 @@ class Statistics:
         collection (collection): The MongoDB collection where the statistics will be stored.
     """
 
-    def __init__(self, store_id: int, planogram: str, date: str, time: str, model_percentage: str, error_percentage: str, collection: Collection) -> None:
+    def __init__(self, store_id: int, planogram: str, date: str, 
+                 time: str, model_percentage: str, error_percentage: str, 
+                 person:str, products: List, collection: Collection) -> None:
         """
         Initializes a Statistics instance with the provided data and a MongoDB collection.
 
@@ -27,6 +31,8 @@ class Statistics:
         """
         self.store_id = store_id
         self.planogram = planogram
+        self.person = person
+        self.products = products
         self.date = date
         self.time = time
         self.model_percentage = model_percentage
@@ -46,6 +52,8 @@ class Statistics:
             'planogram': self.planogram,
             'date': self.date,
             'time': self.time,
+            'person': self.person,
+            'products': self.products,
             'model_percentage': self.model_percentage,
             'error_percentage': self.error_percentage,
         }
