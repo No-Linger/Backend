@@ -1,5 +1,5 @@
 from pymongo.collection import Collection
-from typing import Dict
+from typing import Dict, List
 
 
 class Statistics:
@@ -18,7 +18,7 @@ class Statistics:
 
     def __init__(self, planogram: str, date: str, 
                  time: str, model_percentage: str, 
-                 person:str, products: Dict, collection: Collection) -> None:
+                 person: List, products: Dict, collection: Collection) -> None:
         """
         Initializes a Statistics instance with the provided data and a MongoDB collection.
 
