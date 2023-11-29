@@ -77,7 +77,7 @@ def get_planogram():
 
         planograms = []
 
-        response = database.get_collection("Planograms").find({"R   egion": user["Region"]})
+        response = database.get_collection("Planograms").find({"Region": user["Region"]})
         for planogram in response:
             planogram["_id"] = str(planogram["_id"])
             planograms.append(planogram)
@@ -95,22 +95,22 @@ def insert_stats():
         statistics = Statistics(
             date='',
             time='',
+            planogram='',
             model_percentage='',
-            error_percentage='',
             person='',
-            products=[],
+            products={},
             collection=database.get_collection("Statistics")
         )
         
         statistics_list = []
         for item in data:
             statistic = statistics
-            statistic.date = item["date"]
-            statistic.time = item["time"]
-            statistic.model_percentage = item['model_percentage']
-            statistic.error_percentage = item['error_percentage'],
-            statistic.person = item['person'],
-            statistic.products = item['products']
+            statistic.planogram = item["planograma"]
+            statistic.date = item["fecha"]
+            statistic.time = item["hora"]
+            statistic.model_percentage = item['precision']
+            statistic.person = item['usuario'],
+            statistic.products = item['malColocados']
             
 
             statistics_list.append(statistic.to_dic())

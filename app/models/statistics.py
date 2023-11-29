@@ -1,5 +1,5 @@
 from pymongo.collection import Collection
-from typing import List
+from typing import Dict
 
 
 class Statistics:
@@ -16,9 +16,9 @@ class Statistics:
         collection (collection): The MongoDB collection where the statistics will be stored.
     """
 
-    def __init__(self, store_id: int, planogram: str, date: str, 
-                 time: str, model_percentage: str, error_percentage: str, 
-                 person:str, products: List, collection: Collection) -> None:
+    def __init__(self, planogram: str, date: str, 
+                 time: str, model_percentage: str, 
+                 person:str, products: Dict, collection: Collection) -> None:
         """
         Initializes a Statistics instance with the provided data and a MongoDB collection.
 
@@ -29,14 +29,12 @@ class Statistics:
             error_percentage (str): The error percentage of the statistics.
             collection (collection): The MongoDB collection where the statistics will be stored.
         """
-        self.store_id = store_id
         self.planogram = planogram
         self.person = person
         self.products = products
         self.date = date
         self.time = time
         self.model_percentage = model_percentage
-        self.error_percentage = error_percentage
         self.statsCollection = collection
     
 
@@ -48,14 +46,12 @@ class Statistics:
             dict: A dictionary representation of the Statistics instance.
         """
         return {
-            'store_id': self.store_id,
-            'planogram': self.planogram,
-            'date': self.date,
-            'time': self.time,
-            'person': self.person,
-            'products': self.products,
-            'model_percentage': self.model_percentage,
-            'error_percentage': self.error_percentage,
+            'planograma': self.planogram,
+            'fecha': self.date,
+            'hora': self.time,
+            'usuario': self.person,
+            'malColocados': self.products,
+            'precision': self.model_percentage,
         }
     
     def insert(self):
