@@ -109,7 +109,7 @@ def insert_stats():
             statistic.date = item["fecha"]
             statistic.time = item["hora"]
             statistic.model_percentage = item['precision']
-            statistic.person = item['usuario'],
+            statistic.person = item['usuario']
             statistic.products = item['malColocados']
             
 
