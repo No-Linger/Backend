@@ -41,7 +41,7 @@ def insert_planogram():
             user_id = decoded_token["user_id"]
         except Exception as e:
             logging.exception(str(e))
-            return jsonify({"error": "Error authenticating user"})
+            return jsonify({"error": "Error authenticating user"}), 401
 
         user = database.get_collection("Users").find_one({"_id": user_id})
         planogram = request.json
@@ -71,7 +71,7 @@ def get_planogram():
             user_id = decoded_token["user_id"]
         except Exception as e:
             logging.exception(str(e))
-            return jsonify({"error": "Error authenticating user"})
+            return jsonify({"error": "Error authenticating user"}), 401
 
         user = database.get_collection("Users").find_one({"_id": user_id})
 
@@ -97,7 +97,7 @@ def insert_stats():
             time='',
             planogram='',
             model_percentage='',
-            person='',
+            person=[],
             products={},
             collection=database.get_collection("Statistics")
         )
@@ -147,7 +147,7 @@ def insert_store():
             user_id = decoded_token["user_id"]
         except Exception as e:
             logging.exception(str(e))
-            return jsonify({"error": "Error authenticating user"})
+            return jsonify({"error": "Error authenticating user"}), 401
 
         user = database.get_collection("Users").find_one({"_id": user_id})
         data = request.json
@@ -178,7 +178,7 @@ def get_stores():
             user_id = decoded_token["user_id"]
         except Exception as e:
             logging.exception(str(e))
-            return jsonify({"error": "Error authenticating user"})
+            return jsonify({"error": "Error authenticating user"}), 401
 
         user = database.get_collection("Users").find_one({"_id": user_id})
         stores = []
@@ -227,7 +227,7 @@ def get_users():
             user_id = decoded_token["user_id"]
         except Exception as e:
             logging.exception(str(e))
-            return jsonify({"error": "Error authenticating user"})
+            return jsonify({"error": "Error authenticating user"}), 401
 
         user = database.get_collection("Users").find_one({"_id": user_id})
         people = []
@@ -257,4 +257,4 @@ def get_user():
         return jsonify({"user": user})
     except Exception as e:
         logging.exception(str(e))
-        return jsonify({"error": "Error getting user data from database"})
+        return jsonify({"error": "Error getting user data from database"}), 500
